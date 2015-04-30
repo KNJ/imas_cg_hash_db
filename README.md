@@ -1,41 +1,38 @@
-#imas_cg_hash
+# imas_cg_hash_db
 
-アイドルのアルバムID（以下、ID）と画像ハッシュ（以下、ハッシュ）の相互変換を行うためのJSONファイル群です。
+## 概要
 
-##JSONファイル
+ISA氏の[imas_cg_hash](https://github.com/isaisstillalive/imas_cg_hash)をデータベースにインポートするJavaScriptです。とりあえずMySQLのみ対応しています。
 
-###id2hash.json
+## 要件
 
-アイドルのIDからハッシュや特訓前後のID、ハッシュを取得するためのJSONファイルです。
+- Node
+- MySQL
 
-アイドルのIDをキーに、[アイドルデータ形式](#アイドルデータ形式)のオブジェクトを取得できます。
+## 準備
 
-####例
-```json
-"3410001": {"id": "3410001", "hash": "94f468204a314b13c221bc2ff351a15a", "name": "[ちびっこﾎﾟﾘｽ]龍崎薫", "next_id": "3510002", "next_hash": "b7bb5571402b624ffde22149b35d812c", "id_family": ["3410001", "3510002"], "hash_family": ["94f468204a314b13c221bc2ff351a15a", "b7bb5571402b624ffde22149b35d812c"]}
+初めて使うときは、専用のデータベースとユーザを作成します。
+
+```sql
+CREATE DATABASE IF NOT EXISTS `imas_cg_hash`;
+GRANT SELECT,INSERT,CREATE,DROP,LOCK TABLES ON imas_cg_hash.* TO ichd@localhost IDENTIFIED BY 'EEXvM/Yc';
 ```
 
-###hash2id.json
+パッケージをインストールします。
 
-アイドルのハッシュからIDや特訓前後のID、ハッシュを取得するためのJSONファイルです。
-
-アイドルのハッシュをキーに、[アイドルデータ形式](#アイドルデータ形式)のオブジェクトを取得できます。
-
-####例
-```json
-"2175109269fe3e11706218748d8a2d9a": {"id": "3502902", "hash": "2175109269fe3e11706218748d8a2d9a", "name": "[ｻﾝﾌﾗﾜｰｲｴﾛｰ]龍崎薫+", "prev_id": "3402901", "prev_hash": "ae3ba85f888597f52c2744eeac3d9ace", "id_family": ["3402901", "3502902"], "hash_family": ["ae3ba85f888597f52c2744eeac3d9ace", "2175109269fe3e11706218748d8a2d9a"]}
+```console
+$ npm i
 ```
 
-##アイドルデータ形式
+## 使い方
 
-|キー         |意味                                |例                                                                                        |
-|:------------|:-----------------------------------|:-----------------------------------------------------------------------------------------|
-|id           |ID                                  |`"id": "3000401"`                                                                         |
-|hash         |ハッシュ                            |`"hash": "6bd01496d9b00da9563c7e92b6a40257"`                                              |
-|name         |名前                                |`"name": "龍崎薫"`                                                                        |
-|next\_id     |特訓後のID（特訓前、10進のみ）      |`"next_id": "3100402"`                                                                    |
-|prev\_id     |特訓前のID（特訓後、10進のみ）      |`"prev_id": "3100401"`                                                                    |
-|next\_hash   |特訓後のハッシュ（特訓前、10進のみ）|`"next_hash": "ce9be94eb3291a7f91c73a7824eb388c"`                                         |
-|prev\_hash   |特訓前のハッシュ（特訓後、10進のみ）|`"prev_hash": "6bd01496d9b00da9563c7e92b6a40257"`                                         |
-|id\_family   |特訓前後のIDの配列                  |`"id_family": ["3000401", "3100402"]`                                                     |
-|hash\_family |特訓前後のハッシュの配列            |`"hash_family": ["6bd01496d9b00da9563c7e92b6a40257", "ce9be94eb3291a7f91c73a7824eb388c"]` |
+`ichd.js`を実行してください。
+
+```console
+$ node ichd.js
+```
+
+## 注意事項
+
+- 動作チェックが完了したらデフォルトのパスワードは変更してください。
+- 既存のテーブルは一旦削除されるので、更新の際はバックアップを忘れずにとってください。
